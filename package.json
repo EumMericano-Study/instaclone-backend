@@ -4,7 +4,7 @@
     "description": "instaclone backend repository",
     "main": "index.js",
     "scripts": {
-        "dev": "node server.ts"
+        "dev": "nodemon --exec node server.ts"
     },
     "repository": {
         "type": "git",
@@ -20,5 +20,8 @@
     "dependencies": {
         "apollo-server": "^3.6.1",
         "graphql": "^16.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
     }
 }
