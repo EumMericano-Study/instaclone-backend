@@ -4,7 +4,7 @@
     "description": "instaclone backend repository",
     "main": "index.js",
     "scripts": {
-        "dev": ""
+        "dev": "node server.ts"
     },
     "repository": {
         "type": "git",
@@ -16,5 +16,9 @@
     "bugs": {
         "url": "https://github.com/EumMericano-Study/instaclone-backend/issues"
     },
-    "homepage": "https://github.com/EumMericano-Study/instaclone-backend#readme"
+    "homepage": "https://github.com/EumMericano-Study/instaclone-backend#readme",
+    "dependencies": {
+        "apollo-server": "^3.6.1",
+        "graphql": "^16.2.0"
+    }
 }
