@@ -1,22 +1,22 @@
 import { ApolloServer, gql } from "apollo-server";
 
 const typeDefs = gql`
-    type Query {
-        hello: String
-    }
+  type Query {
+    hello: String
+  }
 `;
 
 const resolvers = {
-    Query: {
-        hello: () => "baby",
-    },
+  Query: {
+    hello: () => "baby",
+  },
 };
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+  typeDefs,
+  resolvers,
 });
 
 server
-    .listen(4000)
-    .then(() => console.log("Server is running on http://localhost:4000/"));
+  .listen(4000)
+  .then(() => console.log("Server is running on http://localhost:4000/"));
