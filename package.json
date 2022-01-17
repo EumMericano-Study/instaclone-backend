@@ -4,7 +4,7 @@
     "description": "instaclone backend repository",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --exec node server.ts"
+        "dev": "nodemon --exec \"ts-node\" src/server.ts"
     },
     "repository": {
         "type": "git",
@@ -19,9 +19,19 @@
     "homepage": "https://github.com/EumMericano-Study/instaclone-backend#readme",
     "dependencies": {
         "apollo-server": "^3.6.1",
-        "graphql": "^16.2.0"
+        "graphql": "^16.2.0",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.5.4"
     },
     "devDependencies": {
         "nodemon": "^2.0.15"
-    }
+    },
+    "include": [
+        "src/*.ts",
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
 }
