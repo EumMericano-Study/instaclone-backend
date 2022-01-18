@@ -14,11 +14,11 @@ const typeDefs = gql`
   }
   type Query {
     movies: [Movie]
-    movie: Movie
+    movie(id: Int!): Movie
   }
   type Mutation {
-    createMovie(title: String!): Boolean
-    deleteMovie(title: String!): Boolean
+    createMovie(title: String!, year: Int!, genre: String): Movie
+    deleteMovie(id: Int!): Boolean
   }
 `;
 interface MovieState {
@@ -33,15 +33,12 @@ interface MovieState {
 const resolvers = {
   Query: {
     movies: () => client.movie.findMany(),
-    movie: () => ({ title: "hello", year: 2022 }),
+    movie: (_: any, { id }: MovieState) => ({ title: "hello", year: 2022 }),
   },
   Mutation: {
-    createMovie: (_: any, { title }: MovieState) => {
-      console.log(title);
-      return true;
-    },
+    createMovie: (_: any, { title, year, genre }: MovieState) =>
+      client.movie.create({ data: { title, year, genre } }),
     deleteMovie: (_: any, { title }: MovieState) => {
-      console.log(title);
       return true;
     },
   },
