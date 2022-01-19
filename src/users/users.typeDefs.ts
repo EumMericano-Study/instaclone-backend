@@ -1,7 +1,12 @@
 import { gql } from "apollo-server";
 
-// 스텝 1. schema와 graphql 동기화
-//  + 스키마를 새로 정의했다면 다시 migrate
+/**
+ *  모델 제작 순서
+ * 1. prisma schema 정의
+ * 2. graphql schema 정의
+ * 3. mutations, queries 정의
+ */
+
 export default gql`
   type User {
     id: Int!
