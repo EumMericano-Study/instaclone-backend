@@ -10,7 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 모델이 변경되면 항상 migrate
+//  모델이 변경되면 항상 migrate
+//  
+//  DB의 unique 키 값은 최후의 보루 처럼 생각할 것
+//  DB의 오류를 마주하지 않고
+//  코드 로직을 통해 조건이 걸러질 수 있어야 함
 model User {
   id Int @id @default(autoincrement())
   firstName String
