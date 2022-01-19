@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { ApolloServer, gql } from "apollo-server";
-import { Movie } from "@types";
-
-const client = new PrismaClient();
+import { Movie } from "@src/types";
+import client from "@src/client";
 
 const typeDefs = gql`
     type Movie {
