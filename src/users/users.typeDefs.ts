@@ -17,4 +17,16 @@ export default gql`
     createdAt: String!
     updatedAt: String!
   }
+  type Query {
+    user(userName: String!): User
+  }
+  type Mutation {
+    createUser(
+      firstName: String!
+      lastName: String
+      userName: String!
+      email: String!
+      password: String!
+    ): User
+  }
 `;
