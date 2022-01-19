@@ -34,6 +34,7 @@
     "devDependencies": {
         "@babel/core": "^7.16.7",
         "@babel/preset-env": "^7.16.8",
+        "@types/bcrypt": "^5.0.0",
         "nodemon": "^2.0.15",
         "prisma": "^3.8.1",
         "ts-node": "^10.4.0",
