@@ -3,7 +3,7 @@ import { User } from "@src/types/user";
 
 export default {
   Mutation: {
-    createUser: (
+    createAccount: (
       _: any,
       { firstName, lastName, userName, email, password }: User.Item
     ) =>
