@@ -1,41 +1,20 @@
-import { gql } from "apollo-server";
-import { Movie } from "@src/types";
-import client from "@src/client";
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { mergeResolvers, mergeTypeDefs } from "@graphql-tools/merge";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
-const typeDefs = gql`
-    type Movie {
-        id: Int!
-        title: String!
-        year: Int!
-        genre: String
-        createdAt: String!
-        updatedAt: String!
-    }
-    type Query {
-        movies: [Movie]
-        movie(id: Int!): Movie
-    }
-    type Mutation {
-        createMovie(title: String!, year: Int!, genre: String): Movie
-        updateMovie(id: Int!, year: Int!): Movie
-        deleteMovie(id: Int!): Movie
-    }
-`;
+/**
+ * pattern language
+ *    **는 폴더를 뜻하고 *는 파일을 뜻함
+ *    경로를 여러개 선정할 때는 glob을 사용 => {A path, B path}
+ *    glob 사용시 두가지 경로 모두 탐색하게 됨
+ */
+const loadedTypes = loadFilesSync(`${__dirname}/**/*.typeDefs.ts`);
+const loadedResolvers = loadFilesSync(
+    `${__dirname}/**/*.{queries,mutations}.ts`
+);
+const typeDefs = mergeTypeDefs(loadedTypes);
+const resolvers = mergeResolvers(loadedResolvers);
 
-const resolvers = {
-    Query: {
-        movies: () => client.movie.findMany(),
-        movie: (_: any, { id }: Movie.Item) =>
-            client.movie.findUnique({ where: { id } }),
-    },
-    Mutation: {
-        createMovie: (_: any, { title, year, genre }: Movie.Item) =>
-            client.movie.create({ data: { title, year, genre } }),
-        updateMovie: (_: any, { id, year }: Movie.Item) =>
-            client.movie.update({ where: { id }, data: { year } }),
-        deleteMovie: (_: any, { id }: Movie.Item) =>
-            client.movie.delete({ where: { id } }),
-    },
-};
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-export { typeDefs, resolvers };
+export default schema;

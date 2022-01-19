@@ -1,8 +1,8 @@
 import { ApolloServer } from "apollo-server";
 
-import { typeDefs, resolvers } from "@src/schema";
+import schema from "@src/schema";
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
 
 server
     .listen(4000)
