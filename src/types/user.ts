@@ -1,12 +1,16 @@
 export declare namespace User {
-  interface Item {
-    id: number;
-    firstName: string;
-    lastName: string;
-    userName: string;
-    email: string;
-    password: string;
-    createdAt: string;
-    updatedAt: string;
-  }
+    interface Item {
+        id: number;
+        firstName: string;
+        lastName: string;
+        userName: string;
+        email: string;
+        password: string;
+        createdAt: string;
+        updatedAt: string;
+        token: string;
+    }
+    interface Token {
+        id: number;
+    }
 }
