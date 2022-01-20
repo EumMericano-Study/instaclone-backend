@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 import client from "@src/client";
 import { User } from "@src/types/user";
 
@@ -54,6 +55,19 @@ export default {
                 };
             }
             // TODO 3: 유저에게 토큰발행
+            /**
+             * 토큰은 그저 우리가 서명했던 토큰임을 확인하기 위한 수단일 뿐,
+             * 아무리 외부인이 복호화할 수 없더라도, (불가능 하지 않을 뿐더러)
+             * 어떠한 개인정보도 있어선 안된다.
+             */
+            const token = await jwt.sign(
+                { id: user.id },
+                process.env.SECRET_KEY
+            );
+            return {
+                ok: true,
+                token,
+            };
         },
     },
 };
