@@ -29,6 +29,7 @@
         "dotenv": "^14.2.0",
         "graphql": "^16.2.0",
         "graphql-tools": "^8.2.0",
+        "jsonwebtoken": "^8.5.1",
         "typescript": "^4.5.4"
     },
     "devDependencies": {
