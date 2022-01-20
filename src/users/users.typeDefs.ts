@@ -25,6 +25,10 @@ export default gql`
         token: String
         error: String
     }
+    type EditProfileResult {
+        ok: Boolean!
+        error: String
+    }
     type Mutation {
         createAccount(
             firstName: String!
@@ -34,5 +38,12 @@ export default gql`
             password: String!
         ): User
         login(userName: String!, password: String!): LoginResult!
+        editProfile(
+            firstName: String
+            lastName: String
+            userName: String
+            email: String
+            password: String
+        ): EditProfileResult!
     }
 `;
