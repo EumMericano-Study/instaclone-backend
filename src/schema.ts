@@ -9,9 +9,7 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
  *    glob 사용시 두가지 경로 모두 탐색하게 됨
  */
 const loadedTypes = loadFilesSync(`${__dirname}/**/*.typeDefs.ts`);
-const loadedResolvers = loadFilesSync(
-    `${__dirname}/**/*.{queries,mutations}.ts`
-);
+const loadedResolvers = loadFilesSync(`${__dirname}/**/*.{resolvers}.ts`);
 const typeDefs = mergeTypeDefs(loadedTypes);
 const resolvers = mergeResolvers(loadedResolvers);
 
