@@ -10,6 +10,7 @@
 require("dotenv").config();
 import { ApolloServer } from "apollo-server";
 import schema from "@src/schema";
+import { getUserByAuth } from "./users/users.utils";
 
 /**
  * context를 이용해서 모든 resolver에서 사용할 수 있는
@@ -20,9 +21,9 @@ import schema from "@src/schema";
  */
 const server = new ApolloServer({
     schema,
-    context: ({ req }) => {
+    context: async ({ req }) => {
         return {
-            Authorization: req.headers.authorization,
+            loggedInUser: await getUserByAuth(req.headers.authorization),
         };
     },
 });

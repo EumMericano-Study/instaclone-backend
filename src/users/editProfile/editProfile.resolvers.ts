@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
+
 import client from "@src/client";
 import { User, Context } from "@src/types";
 
@@ -14,13 +14,8 @@ export default {
                 email,
                 password: newPassword,
             }: User.Item,
-            { Authorization }: Context
+            { loggedInUser }: Context
         ) => {
-            const { id } = (await jwt.verify(
-                Authorization,
-                process.env.SECRET_KEY
-            )) as User.Token;
-
             let modulatedPassword = null;
 
             if (newPassword) {
@@ -34,7 +29,7 @@ export default {
              * 데이터베이스에 undefined가 저장되지 않는다.
              */
             const updatedUser = await client.user.update({
-                where: { id },
+                where: { id: loggedInUser.id },
                 data: {
                     firstName,
                     lastName,

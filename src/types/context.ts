@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export declare interface Context {
-    Authorization: string;
+    loggedInUser: User.Item;
 }
