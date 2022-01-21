@@ -24,6 +24,19 @@ export const getUserByAuth = async (Authorization: string) => {
  * Currying
  * 함수를 리턴하는 함수
  * 함수형 프로그래밍 - 코드를 짧고 간결하게, 반복을 최소화 할 수 있다.
+ *
+ * ※ 상황
+ * throw new Error로 로직을 처리하지 않고,
+ * 추가 함수를 통해 특정한 결과값 (return { ok: false, error: "~~~"}) 을
+ * 리턴하고 싶음
+ *
+ * 추가 함수에서 return {ok: false, error: "~~~"} 식으로 작성해서
+ * 먼저 실행시킨다고 하더라도,
+ * 아래 로직을 막을 방법이 없음
+ * (if같은걸 쓴다면 가능하지만 코드를 더럽힐 수 밖에 없음)
+ *
+ * 그래서 Currying함수를 통해 함수에서 함수를 리턴받아
+ * return { ok:false, error: "~~~" }를 리턴하려 함.
  */
 
 export function protectedResolver(resolver) {

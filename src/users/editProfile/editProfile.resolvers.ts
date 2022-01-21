@@ -4,6 +4,11 @@ import client from "@src/client";
 import { User, Context } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 
+/**
+ * Currying 함수에서 리턴 될 함수
+ * mutation에서 protector함수를 통과했을 경우
+ * 실질적으로 실행될 resolver
+ */
 const resolverFn = async (
     _: any,
     { firstName, lastName, userName, email, password: newPassword }: User.Item,
