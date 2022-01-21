@@ -8,7 +8,6 @@ export declare namespace User {
         password: string;
         createdAt: string;
         updatedAt: string;
-        token: string;
     }
     interface Token {
         id: number;
