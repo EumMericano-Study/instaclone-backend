@@ -19,3 +19,7 @@ export const getUserByAuth = async (Authorization: string) => {
         return null;
     }
 };
+
+export const protectResolver = (user: User.Item) => {
+    if (!user) throw new Error("로그인이 필요한 기능입니다.");
+};

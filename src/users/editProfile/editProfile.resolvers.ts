@@ -14,8 +14,9 @@ export default {
                 email,
                 password: newPassword,
             }: User.Item,
-            { loggedInUser }: Context
+            { loggedInUser, protectResolver }: Context
         ) => {
+            protectResolver(loggedInUser);
             let modulatedPassword = null;
 
             if (newPassword) {
