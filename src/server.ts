@@ -10,7 +10,7 @@
 require("dotenv").config();
 import { ApolloServer } from "apollo-server";
 import schema from "@src/schema";
-import { getUserByAuth, protectResolver } from "./users/users.utils";
+import { getUserByAuth, protectedResolver } from "./users/users.utils";
 
 /**
  * context를 이용해서 모든 resolver에서 사용할 수 있는
@@ -24,7 +24,7 @@ const server = new ApolloServer({
     context: async ({ req }) => {
         return {
             loggedInUser: await getUserByAuth(req.headers.authorization),
-            protectResolver,
+            protectedResolver,
         };
     },
 });

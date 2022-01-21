@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import { User } from "@src/types";
+import { User, Context } from "@src/types";
 import client from "@src/client";
 
 export const getUserByAuth = async (Authorization: string) => {
@@ -20,6 +20,20 @@ export const getUserByAuth = async (Authorization: string) => {
     }
 };
 
-export const protectResolver = (user: User.Item) => {
-    if (!user) throw new Error("로그인이 필요한 기능입니다.");
-};
+/**
+ * Currying
+ * 함수를 리턴하는 함수
+ * 함수형 프로그래밍 - 코드를 짧고 간결하게, 반복을 최소화 할 수 있다.
+ */
+
+export function protectedResolver(resolver) {
+    return function (root, args, context: Context, info) {
+        if (!context.loggedInUser) {
+            return {
+                ok: false,
+                error: "이 기능을 사용하기 위해 먼저 로그인 해주세요.",
+            };
+        }
+        return resolver(root, args, context, info);
+    };
+}
