@@ -11,7 +11,17 @@ require("dotenv").config();
 import { ApolloServer } from "apollo-server";
 import schema from "@src/schema";
 
-const server = new ApolloServer({ schema });
+/**
+ * context를 이용해서 모든 스키마에서 사용할 수 있는 공동 변수를 지정할 수 있음
+ * context는 스키마에서 3번째 argument로 제공된다.
+ */
+const server = new ApolloServer({
+    schema,
+    context: {
+        Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjQyNzIxMjg1fQ.8dYcvgIQjUQHTazSZGGZmUSUS7nNJxUcAocU-l48Rls",
+    },
+});
 
 const PORT = process.env.PORT;
 

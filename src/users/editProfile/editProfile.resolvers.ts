@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import client from "@src/client";
-import { User } from "@src/types/user";
+import { User, Context } from "@src/types";
 
 export default {
     Mutation: {
@@ -13,11 +13,11 @@ export default {
                 userName,
                 email,
                 password: newPassword,
-                token,
-            }: User.Item
+            }: User.Item,
+            { Authorization }: Context
         ) => {
-            const verifiedToken = (await jwt.verify(
-                token,
+            const { id } = (await jwt.verify(
+                Authorization,
                 process.env.SECRET_KEY
             )) as User.Token;
 
@@ -34,7 +34,7 @@ export default {
              * 데이터베이스에 undefined가 저장되지 않는다.
              */
             const updatedUser = await client.user.update({
-                where: { id: verifiedToken.id },
+                where: { id },
                 data: {
                     firstName,
                     lastName,
