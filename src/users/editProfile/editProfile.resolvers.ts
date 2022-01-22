@@ -10,49 +10,57 @@ import { protectedResolver } from "@src/users/users.utils";
  * 실질적으로 실행될 resolver
  */
 const resolverFn = async (
-    _: any,
-    { firstName, lastName, userName, email, password: newPassword }: User.Item,
-    { loggedInUser }: Context
+  _: any,
+  {
+    firstName,
+    lastName,
+    userName,
+    email,
+    password: newPassword,
+    bio,
+  }: User.Item,
+  { loggedInUser }: Context
 ) => {
-    let modulatedPassword = null;
+  let modulatedPassword = null;
 
-    if (newPassword) {
-        modulatedPassword = await bcrypt.hash(newPassword, 10);
-    }
+  if (newPassword) {
+    modulatedPassword = await bcrypt.hash(newPassword, 10);
+  }
 
-    /**
-     * prisma에
-     * undefined 요소를 전송해도
-     * 자동으로 필터링 하여
-     * 데이터베이스에 undefined가 저장되지 않는다.
-     */
-    const updatedUser = await client.user.update({
-        where: { id: loggedInUser.id },
-        data: {
-            firstName,
-            lastName,
-            userName,
-            email,
-            ...(modulatedPassword && {
-                password: modulatedPassword,
-            }),
-        },
-    });
+  /**
+   * prisma에
+   * undefined 요소를 전송해도
+   * 자동으로 필터링 하여
+   * 데이터베이스에 undefined가 저장되지 않는다.
+   */
+  const updatedUser = await client.user.update({
+    where: { id: loggedInUser.id },
+    data: {
+      firstName,
+      lastName,
+      userName,
+      email,
+      bio,
+      ...(modulatedPassword && {
+        password: modulatedPassword,
+      }),
+    },
+  });
 
-    if (updatedUser.id) {
-        return {
-            ok: true,
-        };
-    } else {
-        return {
-            ok: false,
-            error: "회원정보 변경 실패",
-        };
-    }
+  if (updatedUser.id) {
+    return {
+      ok: true,
+    };
+  } else {
+    return {
+      ok: false,
+      error: "회원정보 변경 실패",
+    };
+  }
 };
 
 export default {
-    Mutation: {
-        editProfile: protectedResolver(resolverFn),
-    },
+  Mutation: {
+    editProfile: protectedResolver(resolverFn),
+  },
 };
