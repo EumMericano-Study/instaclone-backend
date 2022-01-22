@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
-
+import { createWriteStream } from "fs";
 import client from "@src/client";
-import { User, Context } from "@src/types";
+import { User, Context, Upload } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 
 /**
@@ -18,9 +18,27 @@ const resolverFn = async (
     email,
     password: newPassword,
     bio,
+    avatar,
   }: User.Item,
   { loggedInUser }: Context
 ) => {
+  const { filename, createReadStream } = (await avatar) as Upload.FileUpload;
+
+  /**
+   * createReadStream과 createWriteStream을 pipe로 연결시킨다
+   */
+  const readStream = createReadStream();
+  /**
+   * process.cwd()
+   *
+   * current working directory
+   * 현재 root 파일 경로 위치를 알려준다
+   */
+  const writeStream = createWriteStream(
+    process.cwd() + "/src/uploads/" + filename
+  );
+  readStream.pipe(writeStream);
+
   let modulatedPassword = null;
 
   if (newPassword) {
