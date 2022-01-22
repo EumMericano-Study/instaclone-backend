@@ -1,4 +1,5 @@
 import { gql } from "apollo-server";
+import { GraphQLUpload } from "graphql-upload";
 
 /**
  *  모델 제작 순서
@@ -19,4 +20,6 @@ export default gql`
     createdAt: String!
     updatedAt: String!
   }
+
+  scalar Upload
 `;
