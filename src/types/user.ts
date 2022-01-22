@@ -1,3 +1,5 @@
+import { Upload } from "@src/types";
+
 export declare namespace User {
   interface Item {
     id: number;
@@ -7,7 +9,7 @@ export declare namespace User {
     email: string;
     password: string;
     bio: string;
-    avatar: string;
+    avatar: Upload.FileUpload | string;
     createdAt: string;
     updatedAt: string;
   }
