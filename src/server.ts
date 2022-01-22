@@ -10,6 +10,7 @@
 require("dotenv").config();
 import { ApolloServer } from "apollo-server-express";
 import * as express from "express";
+import * as logger from "morgan";
 import { graphqlUploadExpress } from "graphql-upload";
 import { typeDefs, resolvers } from "@src/schema";
 import { getUserByAuth } from "./users/users.utils";
@@ -37,6 +38,7 @@ const startServer = async () => {
   await server.start();
 
   const app = express();
+  app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
 
