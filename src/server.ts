@@ -9,7 +9,7 @@
  */
 require("dotenv").config();
 import { ApolloServer } from "apollo-server";
-import schema from "@src/schema";
+import { typeDefs, resolvers } from "@src/schema";
 import { getUserByAuth, protectedResolver } from "./users/users.utils";
 
 /**
@@ -20,19 +20,20 @@ import { getUserByAuth, protectedResolver } from "./users/users.utils";
  * http 헤더를 통해 Authorization의 값으로 jwt token을 주고받는다.
  */
 const server = new ApolloServer({
-    schema,
-    context: async ({ req }) => {
-        return {
-            loggedInUser: await getUserByAuth(req.headers.authorization),
-            protectedResolver,
-        };
-    },
+  typeDefs,
+  resolvers,
+  context: async ({ req }) => {
+    return {
+      loggedInUser: await getUserByAuth(req.headers.authorization),
+      protectedResolver,
+    };
+  },
 });
 
 const PORT = process.env.PORT;
 
 server
-    .listen(PORT)
-    .then(() =>
-        console.log(`🚀 Server is running on http://localhost:${PORT} 🚀`)
-    );
+  .listen(PORT)
+  .then(() =>
+    console.log(`🚀 Server is running on http://localhost:${PORT} 🚀`)
+  );
