@@ -21,7 +21,7 @@ export default {
         const modulatedPassword = await bcrypt.hash(password, 10);
 
         //TODO 3: 유저 정보 저장
-        return client.user.create({
+        await client.user.create({
           data: {
             firstName,
             lastName,
@@ -30,8 +30,14 @@ export default {
             password: modulatedPassword,
           },
         });
+        return {
+          ok: true,
+        };
       } catch (e) {
-        return e;
+        return {
+          ok: false,
+          error: "Cant create account.",
+        };
       }
     },
   },
