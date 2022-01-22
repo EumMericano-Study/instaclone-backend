@@ -1,5 +1,4 @@
 import { gql } from "apollo-server";
-import { GraphQLUpload } from "graphql-upload";
 
 /**
  *  모델 제작 순서
