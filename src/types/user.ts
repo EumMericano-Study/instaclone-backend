@@ -9,7 +9,7 @@ export declare namespace User {
     email: string;
     password: string;
     bio: string;
-    avatar: Upload.FileUpload | string;
+    avatar: Upload.FileUpload;
     createdAt: string;
     updatedAt: string;
   }

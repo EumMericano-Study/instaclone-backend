@@ -25,7 +25,7 @@ import { getUserByAuth } from "./users/users.utils";
 const PORT = process.env.PORT;
 
 const startServer = async () => {
-  const server = new ApolloServer({
+  const apollo = new ApolloServer({
     typeDefs,
     resolvers,
     context: async ({ req }) => {
@@ -35,16 +35,22 @@ const startServer = async () => {
     },
   });
 
-  await server.start();
+  await apollo.start();
 
   const app = express();
   app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
-  server.applyMiddleware({ app });
+  /**
+   * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
+   *
+   * 미들웨어 상단에 있으면 반영되지 않음.
+   */
+  apollo.applyMiddleware({ app });
+  app.use("/static", express.static("src/uploads"));
 
   app.listen({ port: PORT }, () => {
     console.log(
-      `🚀 Server is running on http://localhost:${PORT}${server.graphqlPath} 🚀`
+      `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
     );
   });
 };

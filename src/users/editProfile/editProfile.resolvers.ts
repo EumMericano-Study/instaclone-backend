@@ -22,29 +22,33 @@ const resolverFn = async (
   }: User.Item,
   { loggedInUser }: Context
 ) => {
-  const { filename, createReadStream } = (await avatar) as Upload.FileUpload;
+  let avatarUrl = null;
+  if (avatar) {
+    const { filename, createReadStream } = (await avatar) as Upload.FileUpload;
 
-  /**
-   * createReadStream과 createWriteStream을 pipe로 연결시킨다
-   */
-  const readStream = createReadStream();
-  /**
-   * process.cwd()
-   *
-   * current working directory
-   * 현재 root 파일 경로 위치를 알려준다
-   */
-  const writeStream = createWriteStream(
-    process.cwd() + "/src/uploads/" + filename
-  );
-  readStream.pipe(writeStream);
+    /**
+     * createReadStream과 createWriteStream을 pipe로 연결시킨다
+     */
+    const readStream = createReadStream();
+    /**
+     * process.cwd()
+     *
+     * current working directory
+     * 현재 root 파일 경로 위치를 알려준다
+     */
+    const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`;
+    const writeStream = createWriteStream(
+      process.cwd() + "/src/uploads/" + newFileName
+    );
+    readStream.pipe(writeStream);
+    avatarUrl = `http://localhost:4000/static/${newFileName}`;
+  }
 
   let modulatedPassword = null;
 
   if (newPassword) {
     modulatedPassword = await bcrypt.hash(newPassword, 10);
   }
-
   /**
    * prisma에
    * undefined 요소를 전송해도
@@ -62,6 +66,7 @@ const resolverFn = async (
       ...(modulatedPassword && {
         password: modulatedPassword,
       }),
+      ...(avatar && { avatar: avatarUrl }),
     },
   });
 
