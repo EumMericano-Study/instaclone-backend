@@ -40,11 +40,11 @@ const startServer = async () => {
   app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
 
-  await new Promise<void>((r) => app.listen({ port: 4000 }, r));
-
-  console.log(
-    `🚀 Server is running on http://localhost:${PORT}${server.graphqlPath} 🚀`
-  );
+  app.listen({ port: PORT }, () => {
+    console.log(
+      `🚀 Server is running on http://localhost:${PORT}${server.graphqlPath} 🚀`
+    );
+  });
 };
 
 startServer();
