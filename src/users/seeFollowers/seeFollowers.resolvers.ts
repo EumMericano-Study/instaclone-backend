@@ -7,6 +7,16 @@ export default {
       _: any,
       { userName, page }: { userName: string; page: number }
     ) => {
+      const followUserInfo = await client.user.findUnique({
+        where: { userName },
+        select: { id: true },
+      });
+      if (!followUserInfo)
+        return {
+          ok: false,
+          error: "유저 정보를 찾을 수 없습니다.",
+        };
+
       /**
        * follower를 찾는 1번 방법
        * 호날두 계정에서 팔로워 검색하기
@@ -36,9 +46,17 @@ export default {
           take: 7,
           skip: (page - 1) * 7,
         });
+      /**
+       * 팔로워수 counting
+       * count를 이용해 숫자를 센다.
+       */
+      const totalFollowers = await client.user.count({
+        where: { following: { some: { userName } } },
+      });
       return {
         ok: true,
         followers,
+        totalPages: Math.ceil(totalFollowers / 7),
       };
     },
   },
