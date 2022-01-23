@@ -10,6 +10,8 @@ export declare namespace User {
     password: string;
     bio: string;
     avatar: Upload.FileUpload;
+    followers: User.Item[];
+    following: User.Item[];
     createdAt: string;
     updatedAt: string;
   }
