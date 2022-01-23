@@ -6,14 +6,13 @@ export default {
     followUser: protectedResolver(
       async (_: any, { userName }, { loggedInUser }) => {
         const followUserInfo = await client.user.findUnique({
-          where: {
-            userName,
-          },
+          where: { userName },
+          select: { id: true },
         });
         if (!followUserInfo)
           return {
             ok: false,
-            error: "잘못된 유저 정보를 입력하셨습니다.",
+            error: "유저 정보를 찾을 수 없습니다.",
           };
         await client.user.update({
           where: { id: loggedInUser.id },
