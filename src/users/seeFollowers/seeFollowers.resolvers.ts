@@ -1,12 +1,15 @@
 import client from "@src/client";
-import { User } from "@src/types/user";
+
+interface arguments {
+  userName: string;
+  page: number;
+}
+
+const PAGE_SIZE = 7;
 
 export default {
   Query: {
-    seeFollowers: async (
-      _: any,
-      { userName, page }: { userName: string; page: number }
-    ) => {
+    seeFollowers: async (_: any, { userName, page }: arguments) => {
       const followUserInfo = await client.user.findUnique({
         where: { userName },
         select: { id: true },
@@ -43,8 +46,8 @@ export default {
       const followers = await client.user
         .findUnique({ where: { userName } })
         .following({
-          take: 7,
-          skip: (page - 1) * 7,
+          take: PAGE_SIZE,
+          skip: (page - 1) * PAGE_SIZE,
         });
       /**
        * 팔로워수 counting
@@ -56,7 +59,7 @@ export default {
       return {
         ok: true,
         followers,
-        totalPages: Math.ceil(totalFollowers / 7),
+        totalPages: Math.ceil(totalFollowers / PAGE_SIZE),
       };
     },
   },
