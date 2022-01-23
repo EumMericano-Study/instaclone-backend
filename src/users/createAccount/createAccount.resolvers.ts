@@ -36,7 +36,7 @@ export default {
       } catch (e) {
         return {
           ok: false,
-          error: "Cant create account.",
+          error: "계정을 생성할 수 없습니다.",
         };
       }
     },
