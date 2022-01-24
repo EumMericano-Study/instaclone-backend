@@ -13,4 +13,4 @@ Instaclone Backend
 -   [x] 유저 언팔로잉
 -   [x] 팔로워,팔로잉을 페이지네이션으로 보기
 -   [x] computed field, DB에 없는 영역
--   [ ] 유저 검색
+-   [x] 유저 검색

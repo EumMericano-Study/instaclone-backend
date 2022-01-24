@@ -4,7 +4,7 @@
     "description": "instaclone backend repository",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
+        "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server --ext ts,js",
         "migrate": "npx prisma migrate dev",
         "studio": "npx prisma studio"
     },
