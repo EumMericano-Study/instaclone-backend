@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
-import { User, Context } from "@src/types";
+import { User } from "@src/types";
 import client from "@src/client";
+import { Resolver } from "@src/types/resolvers";
 
 export const getUserByAuth = async (Authorization: string) => {
     try {
@@ -39,8 +40,8 @@ export const getUserByAuth = async (Authorization: string) => {
  * return { ok:false, error: "~~~" }를 리턴하려 함.
  */
 
-export function protectedResolver(resolver) {
-    return function (root, args, context: Context, info) {
+export function protectedResolver(resolver: Resolver) {
+    return function (root, args, context, info) {
         if (!context.loggedInUser) {
             return {
                 ok: false,

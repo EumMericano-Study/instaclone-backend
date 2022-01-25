@@ -1,4 +1,4 @@
-import client from "@src/client";
+import { Resolvers } from "@src/types";
 
 interface Args {
     keyword: string;
@@ -6,9 +6,9 @@ interface Args {
 }
 const SEARCH_SIZE = 8;
 
-export default {
+const resolvers: Resolvers = {
     Query: {
-        searchUsers: async (_: any, { keyword, lastId }: Args) =>
+        searchUsers: async (_, { keyword, lastId }: Args, { client }) =>
             client.user.findMany({
                 where: {
                     userName: {
@@ -21,3 +21,5 @@ export default {
             }),
     },
 };
+
+export default resolvers;
