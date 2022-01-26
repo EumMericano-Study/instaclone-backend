@@ -7,10 +7,10 @@ export const getUserByAuth = async (Authorization: string) => {
     try {
         if (!Authorization) return null;
 
-        const { id } = (await jwt.verify(
+        const { id } = jwt.verify(
             Authorization,
             process.env.SECRET_KEY
-        )) as User.Token;
+        ) as User.Token;
 
         const loggedInUser = await client.user.findUnique({ where: { id } });
 
