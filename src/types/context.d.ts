@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { User } from "./user";
+import { PrismaClient, User } from "@prisma/client";
 
 export declare interface Context {
-    loggedInUser: User.Item;
-    client: PrismaClient;
-    protectResolver: (user: User.Item) => void;
+  loggedInUser: User;
+  client: PrismaClient;
+  protectResolver: (user: User) => void;
 }

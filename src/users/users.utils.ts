@@ -4,21 +4,18 @@ import client from "@src/client";
 import { Resolver } from "@src/types/resolvers";
 
 export const getUserByAuth = async (Authorization: string) => {
-    try {
-        if (!Authorization) return null;
+  try {
+    if (!Authorization) return null;
 
-        const { id } = (await jwt.verify(
-            Authorization,
-            process.env.SECRET_KEY
-        )) as User.Token;
+    const { id } = jwt.verify(Authorization, process.env.SECRET_KEY) as User;
 
-        const loggedInUser = await client.user.findUnique({ where: { id } });
+    const loggedInUser = await client.user.findUnique({ where: { id } });
 
-        if (loggedInUser) return loggedInUser;
-        else return null;
-    } catch {
-        return null;
-    }
+    if (loggedInUser) return loggedInUser;
+    else return null;
+  } catch {
+    return null;
+  }
 };
 
 /**
@@ -41,13 +38,13 @@ export const getUserByAuth = async (Authorization: string) => {
  */
 
 export function protectedResolver(resolver: Resolver) {
-    return function (root, args, context, info) {
-        if (!context.loggedInUser) {
-            return {
-                ok: false,
-                error: "이 기능을 사용하기 위해 먼저 로그인 해주세요.",
-            };
-        }
-        return resolver(root, args, context, info);
-    };
+  return function (root, args, context, info) {
+    if (!context.loggedInUser) {
+      return {
+        ok: false,
+        error: "이 기능을 사용하기 위해 먼저 로그인 해주세요.",
+      };
+    }
+    return resolver(root, args, context, info);
+  };
 }

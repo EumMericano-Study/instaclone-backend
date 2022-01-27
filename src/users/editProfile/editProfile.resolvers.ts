@@ -19,12 +19,12 @@ const resolverFn: Resolver = async (
     password: newPassword,
     bio,
     avatar,
-  }: User.Item,
+  }: User,
   { loggedInUser, client }
 ) => {
   let avatarUrl = null;
   if (avatar) {
-    const { filename, createReadStream } = (await avatar) as Upload;
+    const { filename, createReadStream } = avatar as any as Upload;
 
     /**
      * createReadStream과 createWriteStream을 pipe로 연결시킨다
