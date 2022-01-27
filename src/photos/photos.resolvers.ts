@@ -1,4 +1,4 @@
-import { Resolvers, Photo } from "@src/types";
+import { Resolvers, Photo, Hashtag } from "@src/types";
 
 const resolvers: Resolvers = {
   Photo: {
@@ -7,7 +7,6 @@ const resolvers: Resolvers = {
      * resolver의 parent 또는 root의 위치는
      * 해당 resolver를 호출한 위치의 객체가 호출된다.
      */
-
     user: ({ userId }: Photo, _, { client }) =>
       client.user.findUnique({ where: { id: userId } }),
 
@@ -21,6 +20,16 @@ const resolvers: Resolvers = {
       client.hashtag.findMany({
         where: {
           photos: {
+            some: { id },
+          },
+        },
+      }),
+  },
+  Hashtag: {
+    totalPhotos: ({ id }: Hashtag, _, { client }) =>
+      client.photo.count({
+        where: {
+          hashtags: {
             some: { id },
           },
         },
