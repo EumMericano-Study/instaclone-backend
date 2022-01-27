@@ -1,4 +1,6 @@
-import { Resolvers } from "@src/types";
+import { Resolvers, User } from "@src/types";
+
+const PAGE_SIZE = 7;
 
 /**
  * DB에는 존재하지 않지만 type에는 정의한
@@ -58,6 +60,12 @@ const resolvers: Resolvers = {
             });
             return Boolean(exists);
         },
+        photos: ({ id }: User, { lastId }: { lastId: number }, { client }) =>
+            client.user.findUnique({ where: { id } }).photos({
+                take: PAGE_SIZE,
+                skip: lastId ? 1 : 0,
+                ...(lastId && { cursor: { id: lastId } }),
+            }),
     },
 };
 

@@ -44,6 +44,7 @@ export default gql`
         createdAt: String!
         updatedAt: String!
 
+        photos: [Photo]
         following: [User]
         followers: [User]
 
