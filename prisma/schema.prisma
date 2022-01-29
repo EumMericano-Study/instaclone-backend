@@ -27,6 +27,7 @@ model User {
   //이미지 저장은 url로만 할 것
   avatar    String?
   photos    Photo[]
+  likes     Like[]
   followers User[]   @relation("FollowRelation", references: [id])
   following User[]   @relation("FollowRelation", references: [id])
   createdAt DateTime @default(now())
@@ -42,6 +43,7 @@ model Photo {
   hashtags  Hashtag[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  Like      Like[]
 }
 
 model Hashtag {
@@ -50,4 +52,20 @@ model Hashtag {
   photos    Photo[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  photoId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // compound unique, 두개 이상의 속성이 합쳐져서
+  // 슈퍼키의 역할을 할 때
+  // ex) 한명의 유저는 하나의 사진에 한번만 좋아요를 누를 수 있다,
+  // 데이터의 무결성을 지킬 수 있다.
+  @@unique([userId, photoId])
 }
