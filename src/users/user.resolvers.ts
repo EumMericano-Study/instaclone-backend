@@ -14,9 +14,6 @@ const PAGE_SIZE = 7;
  * root값은 mutation에서 호출된 객체의 정보를 담고 있다
  */
 
-interface Root {
-    id: number;
-}
 /**
  * 실제 인스타그램은 이런식으로 카운팅 하지 않음,
  * 너무 많은 데이터를 내포하다보니 실시간 동기화가 거의 불가능함
@@ -29,7 +26,7 @@ const resolvers: Resolvers = {
     // count 하기 위해 역으로 숫자를 셈
     // graphql에서 자동으로 await동작을 함
     User: {
-        totalFollowing: ({ id }: Root, _, { client }) =>
+        totalFollowing: ({ id }: User, _, { client }) =>
             client.user.count({
                 where: {
                     followers: {
@@ -37,7 +34,7 @@ const resolvers: Resolvers = {
                     },
                 },
             }),
-        totalFollowers: ({ id }: Root, _, { client }) =>
+        totalFollowers: ({ id }: User, _, { client }) =>
             client.user.count({
                 where: {
                     following: {
@@ -45,11 +42,11 @@ const resolvers: Resolvers = {
                     },
                 },
             }),
-        isMe: ({ id }: Root, _, { loggedInUser }) => {
+        isMe: ({ id }: User, _, { loggedInUser }) => {
             if (!loggedInUser) return false;
             return id === loggedInUser.id;
         },
-        isFollowing: async ({ id }: Root, _, { loggedInUser, client }) => {
+        isFollowing: async ({ id }: User, _, { loggedInUser, client }) => {
             if (!loggedInUser) return false;
             //존재하면 1, 없으면 0
             const exists = await client.user.count({
