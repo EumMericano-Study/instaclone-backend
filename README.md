@@ -30,7 +30,7 @@ Instaclone Backend
 
 ## Comments
 
-- [ ] 사진에 댓글 달기
+- [x] 사진에 댓글 달기
 - [ ] 댓글 수정
 - [ ] 댓글 삭제 (isMine)
 
