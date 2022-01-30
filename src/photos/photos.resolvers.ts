@@ -22,9 +22,14 @@ const resolvers: Resolvers = {
       client.hashtag.findMany({
         where: { photos: { some: { id } } },
       }),
+
     likes: ({ id }: Photo, _, { client }) =>
       client.like.count({ where: { photoId: id } }),
-    isMine: ({ userId }: Photo, _, { loggedInUser, client }) => {
+
+    comments: ({ id }: Photo, _, { client }) =>
+      client.comment.count({ where: { photoId: id } }),
+
+    isMine: ({ userId }: Photo, _, { loggedInUser }) => {
       if (!loggedInUser || loggedInUser.id !== userId) return false;
       else return true;
     },
