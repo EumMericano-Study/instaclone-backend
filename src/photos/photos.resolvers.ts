@@ -30,8 +30,8 @@ const resolvers: Resolvers = {
       client.comment.count({ where: { photoId: id } }),
 
     isMine: ({ userId }: Photo, _, { loggedInUser }) => {
-      if (!loggedInUser || loggedInUser.id !== userId) return false;
-      else return true;
+      if (!loggedInUser) return false;
+      else return loggedInUser.id === userId;
     },
   },
   Hashtag: {

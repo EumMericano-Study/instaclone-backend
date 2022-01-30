@@ -9,8 +9,8 @@ const resolver: Resolvers = {
       client.photo.findUnique({ where: { id: photoId } }),
 
     isMine: ({ userId }: Comment, _, { loggedInUser, client }) => {
-      if (!loggedInUser || loggedInUser.id !== userId) return false;
-      else return true;
+      if (!loggedInUser) return false;
+      else return loggedInUser.id === userId;
     },
   },
 };
