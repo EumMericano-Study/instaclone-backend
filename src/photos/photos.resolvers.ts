@@ -24,6 +24,10 @@ const resolvers: Resolvers = {
       }),
     likes: ({ id }: Photo, _, { client }) =>
       client.like.count({ where: { photoId: id } }),
+    isMine: ({ userId }: Photo, _, { loggedInUser, client }) => {
+      if (!loggedInUser || loggedInUser.id !== userId) return false;
+      else return true;
+    },
   },
   Hashtag: {
     /**
