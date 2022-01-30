@@ -1,5 +1,6 @@
 import { Resolvers, Comment } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
+import { ErrorMessage } from "@src/constants";
 
 const resolver: Resolvers = {
   Mutation: {
@@ -16,7 +17,7 @@ const resolver: Resolvers = {
         if (!isPhotoExists)
           return {
             ok: false,
-            error: "사진이 존재하지 않습니다",
+            error: ErrorMessage.PHOTO_NOT_FOUND,
           };
 
         await client.comment.create({

@@ -1,3 +1,4 @@
+import { ErrorMessage } from "@src/constants";
 import { Resolvers } from "@src/types";
 
 interface Args {
@@ -16,7 +17,7 @@ const resolvers: Resolvers = {
       if (!followUserInfo)
         return {
           ok: false,
-          error: "유저 정보를 찾을 수 없습니다.",
+          error: ErrorMessage.USER_NOT_FOUND,
         };
 
       const following = await client.user

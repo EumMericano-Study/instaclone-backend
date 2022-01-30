@@ -1,5 +1,6 @@
 import { Resolvers, Photo } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
+import { ErrorMessage } from "@src/constants";
 
 const resolver: Resolvers = {
   Mutation: {
@@ -9,7 +10,7 @@ const resolver: Resolvers = {
         if (!findPhoto)
           return {
             ok: false,
-            error: "사진을 찾을 수 없습니다.",
+            error: ErrorMessage.PHOTO_NOT_FOUND,
           };
 
         const like = await client.like.findUnique({

@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 import { User } from "@src/types";
 import client from "@src/client";
 import { Resolver } from "@src/types/resolvers";
+import { ErrorMessage } from "@src/constants";
 
 export const getUserByAuth = async (Authorization: string) => {
   try {
@@ -42,7 +43,7 @@ export function protectedResolver(resolver: Resolver) {
     if (!context.loggedInUser) {
       return {
         ok: false,
-        error: "이 기능을 사용하기 위해 먼저 로그인 해주세요.",
+        error: ErrorMessage.LOGIN_FIRST,
       };
     }
     return resolver(root, args, context, info);

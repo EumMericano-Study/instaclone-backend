@@ -3,6 +3,7 @@ import { createWriteStream } from "fs";
 import { Upload, Resolvers, User } from "@src/types";
 import { Resolver } from "@src/types/resolvers";
 import { protectedResolver } from "@src/users/users.utils";
+import { ErrorMessage } from "@src/constants";
 
 /**
  * Currying 함수에서 리턴 될 함수
@@ -77,7 +78,7 @@ const resolverFn: Resolver = async (
   } else {
     return {
       ok: false,
-      error: "회원정보 변경 실패",
+      error: ErrorMessage.CANT_EDIT,
     };
   }
 };
