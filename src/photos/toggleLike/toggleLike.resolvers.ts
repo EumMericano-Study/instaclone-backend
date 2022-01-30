@@ -27,18 +27,22 @@ const resolver: Resolvers = {
         } else {
           await client.like.create({
             data: {
-              userId: loggedInUser.id,
-              photoId: id,
               /**
+               * 내가 했던 방법
+               * userId: loggedInUser.id,
+               * photoId: id,
+               *
                * nico 방법
                *
-               * user: {
-               *  connect: { id: loggedInUser.id },
-               * },
-               * photo: {
-               *  connect: { id: findPhoto.id },
-               * },
+               * relationship을 위해
+               * connect로 연결해주어야 한다고 함
                */
+              user: {
+                connect: { id: loggedInUser.id },
+              },
+              photo: {
+                connect: { id: findPhoto.id },
+              },
             },
           });
         }
