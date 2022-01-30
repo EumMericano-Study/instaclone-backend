@@ -17,21 +17,22 @@ datasource db {
 //  코드 로직을 통해 조건이 걸러질 수 있어야 함
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   firstName String
   lastName  String?
-  userName  String   @unique
-  email     String   @unique
+  userName  String    @unique
+  email     String    @unique
   password  String
   bio       String?
   //이미지 저장은 url로만 할 것
   avatar    String?
   photos    Photo[]
   likes     Like[]
-  followers User[]   @relation("FollowRelation", references: [id])
-  following User[]   @relation("FollowRelation", references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  followers User[]    @relation("FollowRelation", references: [id])
+  following User[]    @relation("FollowRelation", references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Comment   Comment[]
 }
 
 model Photo {
@@ -44,6 +45,7 @@ model Photo {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Like      Like[]
+  Comment   Comment[]
 }
 
 model Hashtag {
@@ -68,4 +70,16 @@ model Like {
   // ex) 한명의 유저는 하나의 사진에 한번만 좋아요를 누를 수 있다,
   // 데이터의 무결성을 지킬 수 있다.
   @@unique([userId, photoId])
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  user    User   @relation(fields: [userId], references: [id])
+  photo   Photo  @relation(fields: [photoId], references: [id])
+  payload String
+  userId  Int
+  photoId Int
+
+  createdAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
 }
