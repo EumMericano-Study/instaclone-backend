@@ -11,7 +11,7 @@ const resolvers: Resolvers = {
       if (!user) {
         return {
           ok: false,
-          error: ErrorMessage.USER_NOT_FOUND,
+          error: ErrorMessage.WRONG_TYPED,
         };
       }
       // TODO 2: 패스워드 확인
@@ -19,7 +19,7 @@ const resolvers: Resolvers = {
       if (!passwordOk) {
         return {
           ok: false,
-          error: ErrorMessage.USER_NOT_FOUND,
+          error: ErrorMessage.WRONG_TYPED,
         };
       }
       // TODO 3: 유저에게 토큰발행
