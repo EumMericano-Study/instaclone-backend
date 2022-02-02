@@ -1,13 +1,15 @@
 {
-    "compilerOptions": {
-        "module": "Commonjs",
-        "target": "es5",
-        "sourceMap": true,
-        "allowJs": true,
-        "baseUrl": ".",
-        "paths": {
-            "@src/*": ["src/*"]
-        }
+  "compilerOptions": {
+    "module": "Commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
     },
-    "include": ["./src/**/*"]
+    "outDir": "build",
+    "esModuleInterop": true
+  },
+  "include": ["./src/**/*"]
 }

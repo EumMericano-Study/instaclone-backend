@@ -9,8 +9,8 @@
  */
 require("dotenv").config();
 import { ApolloServer } from "apollo-server-express";
-import * as express from "express";
-import * as logger from "morgan";
+import express from "express";
+import logger from "morgan";
 import { graphqlUploadExpress } from "graphql-upload";
 import { typeDefs, resolvers } from "@src/schema";
 import { getUserByAuth } from "./users/users.utils";
@@ -26,35 +26,35 @@ import client from "@src/client";
 const PORT = process.env.PORT;
 
 const startServer = async () => {
-    const apollo = new ApolloServer({
-        typeDefs,
-        resolvers,
-        context: async ({ req }) => {
-            return {
-                loggedInUser: await getUserByAuth(req.headers.authorization),
-                client,
-            };
-        },
-    });
+  const apollo = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: async ({ req }) => {
+      return {
+        loggedInUser: await getUserByAuth(req.headers.authorization),
+        client,
+      };
+    },
+  });
 
-    await apollo.start();
+  await apollo.start();
 
-    const app = express();
-    app.use(logger("tiny"));
-    app.use(graphqlUploadExpress());
-    /**
-     * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
-     *
-     * 미들웨어 상단에 있으면 반영되지 않음.
-     */
-    apollo.applyMiddleware({ app });
-    app.use("/static", express.static("src/uploads"));
+  const app = express();
+  app.use(logger("tiny"));
+  app.use(graphqlUploadExpress());
+  /**
+   * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
+   *
+   * 미들웨어 상단에 있으면 반영되지 않음.
+   */
+  apollo.applyMiddleware({ app });
+  app.use("/static", express.static("src/uploads"));
 
-    app.listen({ port: PORT }, () => {
-        console.log(
-            `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
-        );
-    });
+  app.listen({ port: PORT }, () => {
+    console.log(
+      `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
+    );
+  });
 };
 
 startServer();
