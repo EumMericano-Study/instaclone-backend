@@ -8,7 +8,7 @@
  * 한곳에서 선언해주면 모든 파일에서 사용 가능하다. (서버 맨 윗줄)
  */
 require("dotenv").config();
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, Config, ExpressContext } from "apollo-server-express";
 import express from "express";
 import logger from "morgan";
 import { graphqlUploadExpress } from "graphql-upload";
@@ -27,6 +27,7 @@ const PORT = process.env.PORT;
 
 const startServer = async () => {
   const apollo = new ApolloServer({
+    playground: true,
     typeDefs,
     resolvers,
     context: async ({ req }) => {
@@ -35,7 +36,7 @@ const startServer = async () => {
         client,
       };
     },
-  });
+  } as Config<ExpressContext>);
 
   await apollo.start();
 
