@@ -8,7 +8,8 @@
  * 한곳에서 선언해주면 모든 파일에서 사용 가능하다. (서버 맨 윗줄)
  */
 require("dotenv").config();
-import { ApolloServer, Config, ExpressContext } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import express from "express";
 import logger from "morgan";
 import { graphqlUploadExpress } from "graphql-upload";
@@ -26,36 +27,41 @@ import client from "@src/client";
 const PORT = process.env.PORT;
 
 const startServer = async () => {
-  const apollo = new ApolloServer({
-    playground: true,
-    typeDefs,
-    resolvers,
-    context: async ({ req }) => {
-      return {
-        loggedInUser: await getUserByAuth(req.headers.authorization),
-        client,
-      };
-    },
-  } as Config<ExpressContext>);
+    const apollo = new ApolloServer({
+        typeDefs,
+        resolvers,
+        /**
+         * 실 배포시 playground, instrospection 삭제
+         * 열어두면 보안상 문제가 심각하다.
+         */
+        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+        introspection: true,
+        context: async ({ req }) => {
+            return {
+                loggedInUser: await getUserByAuth(req.headers.authorization),
+                client,
+            };
+        },
+    });
 
-  await apollo.start();
+    await apollo.start();
 
-  const app = express();
-  app.use(logger("tiny"));
-  app.use(graphqlUploadExpress());
-  /**
-   * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
-   *
-   * 미들웨어 상단에 있으면 반영되지 않음.
-   */
-  apollo.applyMiddleware({ app });
-  app.use("/static", express.static("src/uploads"));
+    const app = express();
+    app.use(logger("tiny"));
+    app.use(graphqlUploadExpress());
+    /**
+     * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
+     *
+     * 미들웨어 상단에 있으면 반영되지 않음.
+     */
+    apollo.applyMiddleware({ app });
+    app.use("/static", express.static("src/uploads"));
 
-  app.listen({ port: PORT }, () => {
-    console.log(
-      `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
-    );
-  });
+    app.listen({ port: PORT }, () => {
+        console.log(
+            `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
+        );
+    });
 };
 
 startServer();
