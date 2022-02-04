@@ -41,10 +41,27 @@ export const getUserByAuth = async (Authorization: string) => {
 export function protectedResolver(resolver: Resolver) {
   return function (root, args, context, info) {
     if (!context.loggedInUser) {
-      return {
-        ok: false,
-        error: ErrorMessage.LOGIN_FIRST,
-      };
+      /**
+       * info 영역으로 알수 있는 중 하나는
+       * 해당 신호가 query인지 mutation인지에 대한 정보다
+       * ※ info.operation.operation
+       *
+       * 모든 query문에서 리턴형태로
+       * {
+       *    ok: Boolean!
+       *    error: String
+       * }
+       * 을 받는것이 아니라면 리턴형태에 맞게 protectedResolver의 리턴을
+       * 맞춰줄 필요가 있다. (리턴형태가 달라 에러가 난다.)
+       * Query문 선언시 리턴형태를 맞춰주기 위해 null을 리턴해주면 된다.
+       */
+      const query = info.operation.operation === "query";
+      if (query) return null;
+      else
+        return {
+          ok: false,
+          error: ErrorMessage.LOGIN_FIRST,
+        };
     }
     return resolver(root, args, context, info);
   };
