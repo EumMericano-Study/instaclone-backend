@@ -1,3 +1,4 @@
+import { Upload } from "@src/types";
 import AWS from "aws-sdk";
 
 AWS.config.update({
@@ -6,3 +7,24 @@ AWS.config.update({
     secretAccessKey: process.env.AWS_SECRET,
   },
 });
+
+interface UploadPhotoArgs {
+  file: Upload;
+  userId: number;
+}
+
+export const uploadPhoto = async ({ file, userId }: UploadPhotoArgs) => {
+  const { filename, createReadStream } = await file;
+  const readStream = createReadStream();
+  const keyName = `${userId}-${Date.now()}-${filename}`;
+  await new AWS.S3()
+    .upload({
+      Bucket: "instaclone-sexy-uploads",
+      Key: keyName,
+      ACL: "public-read",
+      Body: readStream,
+    })
+    .promise();
+
+  return "";
+};

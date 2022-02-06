@@ -4,6 +4,7 @@ import { Upload, Resolvers, User } from "@src/types";
 import { Resolver } from "@src/types/resolvers";
 import { protectedResolver } from "@src/users/users.utils";
 import { ErrorMessage } from "@src/constants";
+import { uploadPhoto } from "@src/shared/shared.utils";
 
 /**
  * Currying 함수에서 리턴 될 함수
@@ -25,24 +26,27 @@ const resolverFn: Resolver = async (
 ) => {
   let avatarUrl = null;
   if (avatar) {
-    const { filename, createReadStream } = avatar as any as Upload;
-
     /**
      * createReadStream과 createWriteStream을 pipe로 연결시킨다
      */
-    const readStream = createReadStream();
     /**
      * process.cwd()
      *
      * current working directory
      * 현재 root 파일 경로 위치를 알려준다
      */
-    const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`;
-    const writeStream = createWriteStream(
-      process.cwd() + "/src/uploads/" + newFileName
-    );
-    readStream.pipe(writeStream);
-    avatarUrl = `http://localhost:4000/static/${newFileName}`;
+    // const { filename, createReadStream } = avatar as any as Upload;
+    // const readStream = createReadStream();
+    // const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`;
+    // const writeStream = createWriteStream(
+    //   process.cwd() + "/src/uploads/" + newFileName
+    // );
+    // readStream.pipe(writeStream);
+    // avatarUrl = `http://localhost:4000/static/${newFileName}`;
+    avatarUrl = await uploadPhoto({
+      file: avatar as any as Upload,
+      userId: loggedInUser.id,
+    });
   }
 
   let modulatedPassword = null;
