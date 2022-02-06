@@ -4,7 +4,7 @@ import { Upload, Resolvers, User } from "@src/types";
 import { Resolver } from "@src/types/resolvers";
 import { protectedResolver } from "@src/users/users.utils";
 import { ErrorMessage } from "@src/constants";
-import { uploadPhoto } from "@src/shared/shared.utils";
+import { uploadToS3 } from "@src/shared/shared.utils";
 
 /**
  * Currying 함수에서 리턴 될 함수
@@ -43,9 +43,10 @@ const resolverFn: Resolver = async (
     // );
     // readStream.pipe(writeStream);
     // avatarUrl = `http://localhost:4000/static/${newFileName}`;
-    avatarUrl = await uploadPhoto({
+    avatarUrl = await uploadToS3({
       file: avatar as any as Upload,
       userId: loggedInUser.id,
+      fileName: "avatars",
     });
   }
 

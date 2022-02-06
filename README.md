@@ -40,4 +40,4 @@ Instaclone Backend
 
 ## Extras
 
-- [ ] S3 이미지 업로드
+- [x] S3 이미지 업로드

@@ -11,12 +11,17 @@ AWS.config.update({
 interface UploadPhotoArgs {
   file: Upload;
   userId: number;
+  fileName?: string;
 }
 
-export const uploadPhoto = async ({ file, userId }: UploadPhotoArgs) => {
+export const uploadToS3 = async ({
+  file,
+  userId,
+  fileName = "",
+}: UploadPhotoArgs) => {
   const { filename, createReadStream } = await file;
   const readStream = createReadStream();
-  const keyName = `${userId}-${Date.now()}-${filename}`;
+  const keyName = `${fileName}/${userId}-${Date.now()}-${filename}`;
   const upload = await new AWS.S3()
     .upload({
       Bucket: "instaclone-sexy-uploads",
