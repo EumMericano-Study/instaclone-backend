@@ -48,7 +48,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/morgan": "^1.9.3",
     "nodemon": "^2.0.15",
-    "prisma": "^3.8.1",
+    "prisma": "^3.9.1",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.12.0"
   },
