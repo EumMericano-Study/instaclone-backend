@@ -1,6 +1,7 @@
 import { Resolvers, Comment } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 
 const resolver: Resolvers = {
   Mutation: {
@@ -15,10 +16,7 @@ const resolver: Resolvers = {
           select: { id: true },
         });
         if (!isPhotoExists)
-          return {
-            ok: false,
-            error: ErrorMessage.PHOTO_NOT_FOUND,
-          };
+          return throwErrorMessage(ErrorMessage.PHOTO_NOT_FOUND);
 
         await client.comment.create({
           data: {
@@ -35,7 +33,7 @@ const resolver: Resolvers = {
             },
           },
         });
-        return { ok: true };
+        return throwOK();
       }
     ),
   },

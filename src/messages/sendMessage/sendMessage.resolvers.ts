@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 import { Resolvers } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 
@@ -23,11 +24,7 @@ const resolver: Resolvers = {
             select: { id: true },
           });
 
-          if (!user)
-            return {
-              ok: false,
-              error: ErrorMessage.USER_NOT_FOUND,
-            };
+          if (!user) return throwErrorMessage(ErrorMessage.USER_NOT_FOUND);
 
           room = await client.room.create({
             data: {
@@ -42,11 +39,7 @@ const resolver: Resolvers = {
             select: { id: true },
           });
 
-          if (!room)
-            return {
-              ok: false,
-              error: ErrorMessage.ROOM_NOT_FOUND,
-            };
+          if (!room) return throwErrorMessage(ErrorMessage.ROOM_NOT_FOUND);
         }
         await client.message.create({
           data: {
@@ -55,7 +48,7 @@ const resolver: Resolvers = {
             user: { connect: { id: loggedInUser.id } },
           },
         });
-        return { ok: true };
+        return throwOK();
       }
     ),
   },

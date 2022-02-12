@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage } from "@src/shared/shared.utils";
 import { Resolvers } from "@src/types";
 
 interface Args {
@@ -15,10 +16,7 @@ const resolvers: Resolvers = {
         select: { id: true },
       });
       if (!followUserInfo)
-        return {
-          ok: false,
-          error: ErrorMessage.USER_NOT_FOUND,
-        };
+        return throwErrorMessage(ErrorMessage.USER_NOT_FOUND);
 
       const following = await client.user
         .findUnique({ where: { userName } })

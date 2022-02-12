@@ -33,3 +33,11 @@ export const uploadToS3 = async ({
 
   return upload.Location;
 };
+
+export const throwErrorMessage = (error: string) => {
+  return { ok: false, error };
+};
+
+export const throwOK = () => {
+  return { ok: true };
+};

@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage } from "@src/shared/shared.utils";
 import { Resolvers } from "@src/types";
 
 interface Args {
@@ -16,11 +17,7 @@ const resolvers: Resolvers = {
         select: { id: true },
       });
       if (!followUserInfo)
-        return {
-          ok: false,
-          error: ErrorMessage.USER_NOT_FOUND,
-        };
-
+        return throwErrorMessage(ErrorMessage.USER_NOT_FOUND);
       /**
        * follower를 찾는 1번 방법
        * 호날두 계정에서 팔로워 검색하기

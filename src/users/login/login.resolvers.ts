@@ -2,26 +2,17 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Resolvers } from "@src/types";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage } from "@src/shared/shared.utils";
 
 const resolvers: Resolvers = {
   Mutation: {
     login: async (_, { userName, password }, { client }) => {
       //TODO 1: userName으로 유저 정보 탐색
       const user = await client.user.findFirst({ where: { userName } });
-      if (!user) {
-        return {
-          ok: false,
-          error: ErrorMessage.WRONG_TYPED,
-        };
-      }
+      if (!user) return throwErrorMessage(ErrorMessage.WRONG_TYPED);
       // TODO 2: 패스워드 확인
       const passwordOk = await bcrypt.compare(password, user.password);
-      if (!passwordOk) {
-        return {
-          ok: false,
-          error: ErrorMessage.WRONG_TYPED,
-        };
-      }
+      if (!passwordOk) return throwErrorMessage(ErrorMessage.WRONG_TYPED);
       // TODO 3: 유저에게 토큰발행
       /**
        * 토큰은 그저 우리가 서명했던 토큰임을 확인하기 위한 수단일 뿐,

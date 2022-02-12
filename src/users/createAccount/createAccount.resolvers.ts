@@ -1,6 +1,7 @@
 import * as bcrypt from "bcrypt";
 import { Resolvers, User } from "@src/types";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 
 const resolvers: Resolvers = {
   Mutation: {
@@ -15,11 +16,7 @@ const resolvers: Resolvers = {
           where: { OR: [{ email }, { userName }] },
         });
 
-        if (isExistingUser)
-          return {
-            ok: false,
-            error: ErrorMessage.EXIST_USER,
-          };
+        if (isExistingUser) return throwErrorMessage(ErrorMessage.EXIST_USER);
         //TODO 2: 비밀번호 변조 (hash=> password, saltRound)
         const modulatedPassword = await bcrypt.hash(password, 10);
 
@@ -33,14 +30,9 @@ const resolvers: Resolvers = {
             password: modulatedPassword,
           },
         });
-        return {
-          ok: true,
-        };
+        return throwOK();
       } catch (e) {
-        return {
-          ok: false,
-          error: ErrorMessage.CANT_CREATE_USER,
-        };
+        return throwErrorMessage(ErrorMessage.CANT_CREATE_USER);
       }
     },
   },

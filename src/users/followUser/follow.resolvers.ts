@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 import { protectedResolver } from "../users.utils";
 
 const resolvers = {
@@ -10,10 +11,7 @@ const resolvers = {
           select: { id: true },
         });
         if (!followUserInfo)
-          return {
-            ok: false,
-            error: ErrorMessage.USER_NOT_FOUND,
-          };
+          return throwErrorMessage(ErrorMessage.USER_NOT_FOUND);
         await client.user.update({
           where: { id: loggedInUser.id },
           data: {
@@ -24,9 +22,7 @@ const resolvers = {
             },
           },
         });
-        return {
-          ok: true,
-        };
+        return throwOK();
       }
     ),
   },

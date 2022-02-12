@@ -1,6 +1,7 @@
 import { protectedResolver } from "@src/users/users.utils";
 import { Resolvers, Comment } from "@src/types";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 
 const resolver: Resolvers = {
   Mutation: {
@@ -10,19 +11,12 @@ const resolver: Resolvers = {
           where: { id },
           select: { userId: true },
         });
-        if (!comment)
-          return {
-            ok: false,
-            error: ErrorMessage.COMMENT_NOT_FOUND,
-          };
+        if (!comment) return throwErrorMessage(ErrorMessage.COMMENT_NOT_FOUND);
         else if (comment.userId !== loggedInUser.id)
-          return {
-            ok: false,
-            error: ErrorMessage.NOT_AUTHORIZED,
-          };
+          return throwErrorMessage(ErrorMessage.NOT_AUTHORIZED);
         else {
           await client.comment.delete({ where: { id } });
-          return { ok: true };
+          return throwOK();
         }
       }
     ),

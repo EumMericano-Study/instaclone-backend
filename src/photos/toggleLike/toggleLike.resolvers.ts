@@ -1,17 +1,14 @@
 import { Resolvers, Photo } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 
 const resolver: Resolvers = {
   Mutation: {
     toggleLike: protectedResolver(
       async (_, { id }: Photo, { loggedInUser, client }) => {
         const findPhoto = await client.photo.findUnique({ where: { id } });
-        if (!findPhoto)
-          return {
-            ok: false,
-            error: ErrorMessage.PHOTO_NOT_FOUND,
-          };
+        if (!findPhoto) return throwErrorMessage(ErrorMessage.PHOTO_NOT_FOUND);
 
         const like = await client.like.findUnique({
           where: {
@@ -47,7 +44,7 @@ const resolver: Resolvers = {
             },
           });
         }
-        return { ok: true };
+        return throwOK();
       }
     ),
   },

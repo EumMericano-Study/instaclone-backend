@@ -4,7 +4,11 @@ import { Upload, Resolvers, User } from "@src/types";
 import { Resolver } from "@src/types/resolvers";
 import { protectedResolver } from "@src/users/users.utils";
 import { ErrorMessage } from "@src/constants";
-import { uploadToS3 } from "@src/shared/shared.utils";
+import {
+  throwErrorMessage,
+  throwOK,
+  uploadToS3,
+} from "@src/shared/shared.utils";
 
 /**
  * Currying 함수에서 리턴 될 함수
@@ -76,16 +80,8 @@ const resolverFn: Resolver = async (
     },
   });
 
-  if (updatedUser.id) {
-    return {
-      ok: true,
-    };
-  } else {
-    return {
-      ok: false,
-      error: ErrorMessage.CANT_EDIT,
-    };
-  }
+  if (updatedUser.id) throwOK();
+  else return throwErrorMessage(ErrorMessage.CANT_EDIT);
 };
 
 const resolver: Resolvers = {

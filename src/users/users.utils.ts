@@ -3,6 +3,7 @@ import { User } from "@src/types";
 import client from "@src/client";
 import { Resolver } from "@src/types/resolvers";
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage } from "@src/shared/shared.utils";
 
 export const getUserByAuth = async (Authorization: string) => {
   try {
@@ -57,11 +58,7 @@ export function protectedResolver(resolver: Resolver) {
        */
       const query = info.operation.operation === "query";
       if (query) return null;
-      else
-        return {
-          ok: false,
-          error: ErrorMessage.LOGIN_FIRST,
-        };
+      else return throwErrorMessage(ErrorMessage.LOGIN_FIRST);
     }
     return resolver(root, args, context, info);
   };

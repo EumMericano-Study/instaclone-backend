@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@src/constants";
+import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 import { Resolvers } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
 import { parsingHashtags } from "../photos.utils";
@@ -37,11 +38,7 @@ const resolvers: Resolvers = {
             },
           },
         });
-        if (!existPhoto)
-          return {
-            ok: false,
-            error: ErrorMessage.CANT_EDIT,
-          };
+        if (!existPhoto) throwErrorMessage(ErrorMessage.CANT_EDIT);
 
         await client.photo.update({
           where: { id },
@@ -58,7 +55,7 @@ const resolvers: Resolvers = {
           },
         });
 
-        return { ok: true };
+        return throwOK();
       }
     ),
   },
