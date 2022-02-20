@@ -27,41 +27,41 @@ import client from "@src/client";
 const PORT = process.env.PORT;
 
 const startServer = async () => {
-    const apollo = new ApolloServer({
-        typeDefs,
-        resolvers,
-        /**
-         * 실 배포시 playground, instrospection 삭제
-         * 열어두면 보안상 문제가 심각하다.
-         */
-        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-        introspection: true,
-        context: async ({ req }) => {
-            return {
-                loggedInUser: await getUserByAuth(req.headers.authorization),
-                client,
-            };
-        },
-    });
-
-    await apollo.start();
-
-    const app = express();
-    app.use(logger("tiny"));
-    app.use(graphqlUploadExpress());
+  const apollo = new ApolloServer({
+    typeDefs,
+    resolvers,
     /**
-     * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
-     *
-     * 미들웨어 상단에 있으면 반영되지 않음.
+     * 실 배포시 playground, instrospection 삭제
+     * 열어두면 보안상 문제가 심각하다.
      */
-    apollo.applyMiddleware({ app });
-    app.use("/static", express.static("src/uploads"));
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    introspection: true,
+    context: async ({ req }) => {
+      return {
+        loggedInUser: await getUserByAuth(req.headers.authorization),
+        client,
+      };
+    },
+  });
 
-    app.listen({ port: PORT }, () => {
-        console.log(
-            `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
-        );
-    });
+  await apollo.start();
+
+  const app = express();
+  app.use(logger("tiny"));
+  app.use(graphqlUploadExpress());
+  /**
+   * apollo위치를 로거, graphqlUploadExpress 아래줄로 이동
+   *
+   * 미들웨어 상단에 있으면 반영되지 않음.
+   */
+  apollo.applyMiddleware({ app });
+  app.use("/static", express.static("src/uploads"));
+
+  app.listen({ port: PORT }, () => {
+    console.log(
+      `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
+    );
+  });
 };
 
 startServer();
