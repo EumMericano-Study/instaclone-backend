@@ -103,9 +103,11 @@ model Message {
   payload String
   user    User   @relation(fields: [userId], references: [id])
   room    Room   @relation(fields: [roomId], references: [id])
+  read    Boolean @default(false)
+
+  userId    Int
+  roomId    Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId    Int
-  roomId    Int
 }
