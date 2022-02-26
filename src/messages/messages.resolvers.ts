@@ -4,7 +4,7 @@ const resolver: Resolvers = {
   Room: {
     users: ({ id }: Room, _, { client }) =>
       client.room.findUnique({ where: { id } }).users(),
-    messages: ({ id }: Room, { client }) =>
+    messages: ({ id }: Room, _, { client }) =>
       client.message.findMany({
         where: { roomId: id },
       }),
@@ -18,6 +18,10 @@ const resolver: Resolvers = {
         },
       });
     },
+  },
+  Message: {
+    user: ({ id }: Message, _, { client }) =>
+      client.message.findUnique({ where: { id } }).user(),
   },
 };
 
