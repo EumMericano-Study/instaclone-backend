@@ -2,7 +2,7 @@ import { Resolvers, Room, Message } from "@src/types";
 
 const resolver: Resolvers = {
   Room: {
-    users: ({ id }: Room, { client }) =>
+    users: ({ id }: Room, _, { client }) =>
       client.room.findUnique({ where: { id } }).users(),
     messages: ({ id }: Room, { client }) =>
       client.message.findMany({
