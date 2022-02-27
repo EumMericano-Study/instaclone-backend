@@ -8,14 +8,17 @@
  * 한곳에서 선언해주면 모든 파일에서 사용 가능하다. (서버 맨 윗줄)
  */
 require("dotenv").config();
+import { createServer } from "http";
+import { execute, subscribe } from "graphql";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import express from "express";
 import logger from "morgan";
 import { graphqlUploadExpress } from "graphql-upload";
-import { typeDefs, resolvers } from "@src/schema";
+import { schema, typeDefs, resolvers } from "@src/schema";
 import { getUserByAuth } from "./users/users.utils";
 import client from "@src/client";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 
 /**
  * context를 이용해서 모든 resolver에서 사용할 수 있는
@@ -27,6 +30,26 @@ import client from "@src/client";
 const PORT = process.env.PORT;
 
 const startServer = async () => {
+  const app = express();
+  const httpServer = createServer(app);
+
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      // This is the `schema` we just created.
+      schema,
+      // These are imported from `graphql`.
+      execute,
+      subscribe,
+    },
+    {
+      // This is the `httpServer` we created in a previous step.
+      server: httpServer,
+      // Pass a different path here if your ApolloServer serves at
+      // a different path.
+      path: "/graphql",
+    }
+  );
+
   const apollo = new ApolloServer({
     typeDefs,
     resolvers,
@@ -34,7 +57,18 @@ const startServer = async () => {
      * 실 배포시 playground, instrospection 삭제
      * 열어두면 보안상 문제가 심각하다.
      */
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    plugins: [
+      ApolloServerPluginLandingPageGraphQLPlayground(),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            },
+          };
+        },
+      },
+    ],
     introspection: true,
     context: async ({ req }) => {
       return {
@@ -46,7 +80,6 @@ const startServer = async () => {
 
   await apollo.start();
 
-  const app = express();
   app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
   /**
