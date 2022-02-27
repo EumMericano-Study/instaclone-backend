@@ -1,2 +1,2 @@
 export * as ErrorMessage from "./error";
-export * as AlertMessage from "./alert";
+export * as PubSubMessage from "./pubsub";

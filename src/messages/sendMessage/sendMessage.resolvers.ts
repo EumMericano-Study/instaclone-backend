@@ -1,4 +1,5 @@
-import { ErrorMessage } from "@src/constants";
+import { ErrorMessage, PubSubMessage } from "@src/constants";
+import pubsub from "@src/pubsub";
 import { throwErrorMessage, throwOK } from "@src/shared/shared.utils";
 import { Resolvers } from "@src/types";
 import { protectedResolver } from "@src/users/users.utils";
@@ -41,13 +42,14 @@ const resolver: Resolvers = {
 
           if (!room) return throwErrorMessage(ErrorMessage.ROOM_NOT_FOUND);
         }
-        await client.message.create({
+        const message = await client.message.create({
           data: {
             payload,
             room: { connect: { id: room.id } },
             user: { connect: { id: loggedInUser.id } },
           },
         });
+        pubsub.publish(PubSubMessage.NEW_MESSAGE, { roomUpdates: message });
         return throwOK();
       }
     ),

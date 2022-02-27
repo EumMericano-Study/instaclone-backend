@@ -8,7 +8,7 @@
  * 한곳에서 선언해주면 모든 파일에서 사용 가능하다. (서버 맨 윗줄)
  */
 require("dotenv").config();
-import { createServer } from "http";
+import http, { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
@@ -33,23 +33,6 @@ const startServer = async () => {
   const app = express();
   const httpServer = createServer(app);
 
-  const subscriptionServer = SubscriptionServer.create(
-    {
-      // This is the `schema` we just created.
-      schema,
-      // These are imported from `graphql`.
-      execute,
-      subscribe,
-    },
-    {
-      // This is the `httpServer` we created in a previous step.
-      server: httpServer,
-      // Pass a different path here if your ApolloServer serves at
-      // a different path.
-      path: "/graphql",
-    }
-  );
-
   const apollo = new ApolloServer({
     typeDefs,
     resolvers,
@@ -71,12 +54,18 @@ const startServer = async () => {
     ],
     introspection: true,
     context: async ({ req }) => {
-      return {
-        loggedInUser: await getUserByAuth(req.headers.authorization),
-        client,
-      };
+      if (req)
+        return {
+          loggedInUser: await getUserByAuth(req.headers.authorization),
+          client,
+        };
     },
   });
+
+  const subscriptionServer = SubscriptionServer.create(
+    { schema, execute, subscribe },
+    { server: httpServer, path: apollo.graphqlPath }
+  );
 
   await apollo.start();
 
@@ -88,13 +77,12 @@ const startServer = async () => {
    * 미들웨어 상단에 있으면 반영되지 않음.
    */
   apollo.applyMiddleware({ app });
-  app.use("/static", express.static("src/uploads"));
 
-  app.listen({ port: PORT }, () => {
+  httpServer.listen(PORT, () =>
     console.log(
       `🚀 Server is running on http://localhost:${PORT}${apollo.graphqlPath} 🚀`
-    );
-  });
+    )
+  );
 };
 
 startServer();
